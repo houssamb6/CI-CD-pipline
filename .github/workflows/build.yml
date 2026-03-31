@@ -1,0 +1,38 @@
+# Name of the workflow (shown in GitHub Actions UI)
+name: CI/CD Pipeline
+
+# Define when the workflow should run
+on:
+  # Allows you to manually trigger the workflow from GitHub UI
+  workflow_dispatch:
+
+  # Automatically run the workflow when code is pushed to the main branch
+  push:
+    branches:
+      - main
+
+# Define the jobs to run in this workflow
+jobs:
+  tests:
+    # Job name displayed in GitHub Actions
+    name: Unit tests
+
+    # The OS/environment where the job will run
+    runs-on: ubuntu-latest
+
+    # Steps executed in this job
+    steps:
+      # Step 1: Checkout your repository code so the workflow can access it
+      - uses: actions/checkout@v4
+
+      # Step 2: Install and configure Java (JDK 22)
+      - name: Set up JDK 22
+        uses: actions/setup-java@v4
+        with:
+          java-version: '22'        # Java version to use
+          distribution: 'temurin'   # JDK distribution (recommended)
+          cache: maven             # Enable Maven dependency caching for faster builds
+
+      # Step 3: Run your Maven tests
+      - name: Run Tests
+        run: mvn -B test           # -B = batch mode (no interactive input)
